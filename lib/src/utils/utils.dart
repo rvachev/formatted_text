@@ -76,7 +76,7 @@ mixin FormattedTextUtils {
               elements,
               style: currentStyle,
               linkStyle: currentStyle.merge(_linkStyle),
-              onOpen: (link) => onLinkTap != null ? onLinkTap(link.url) : {},
+              onOpen: onLinkTap != null ? (link) => onLinkTap(link.url) : null,
             ));
 
             /// Show closing pattern
@@ -136,7 +136,7 @@ mixin FormattedTextUtils {
               elements,
               style: currentStyle,
               linkStyle: currentStyle.merge(_linkStyle),
-              onOpen: (link) => onLinkTap != null ? onLinkTap(link.url) : {},
+              onOpen: onLinkTap != null ? (link) => onLinkTap(link.url) : null,
             ));
 
             /// Reset
@@ -182,7 +182,7 @@ mixin FormattedTextUtils {
         elements,
         style: appliedStyles.last,
         linkStyle: appliedStyles.last.merge(_linkStyle),
-        onOpen: (link) => onLinkTap != null ? onLinkTap(link.url) : {},
+        onOpen: onLinkTap != null ? (link) => onLinkTap(link.url) : null,
       ));
     }
 
