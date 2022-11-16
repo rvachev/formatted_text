@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:linkify/linkify.dart';
 
 import '../constants/defaults.dart';
 import '../models/text_formatter.dart';
+
+const _linkStyle = TextStyle(
+  color: Colors.blue,
+  decoration: TextDecoration.underline,
+);
 
 mixin FormattedTextUtils {
   static List<InlineSpan> formattedSpans(
@@ -10,6 +17,7 @@ mixin FormattedTextUtils {
     TextStyle? style,
     bool showFormattingCharacters = false,
     List<FormattedTextFormatter>? formatters,
+    void Function(String link)? onLinkTap,
   }) {
     final List<InlineSpan> children = [];
     final appliedStyles = <TextStyle>[style ?? const TextStyle()];
@@ -61,9 +69,14 @@ mixin FormattedTextUtils {
           if (substring == lastFormatter.patternChars) {
             final currentStyle = appliedStyles.removeLast();
 
-            children.add(TextSpan(
-              text: currentDataSubstring,
+            final elements = linkify(currentDataSubstring,
+                options: const LinkifyOptions(humanize: false));
+
+            children.add(buildTextSpan(
+              elements,
               style: currentStyle,
+              linkStyle: currentStyle.merge(_linkStyle),
+              onOpen: (link) => onLinkTap != null ? onLinkTap(link.url) : {},
             ));
 
             /// Show closing pattern
@@ -116,9 +129,14 @@ mixin FormattedTextUtils {
           if (currentDataSubstring.isNotEmpty) {
             final currentStyle = appliedStyles.last;
 
-            children.add(TextSpan(
-              text: currentDataSubstring,
+            final elements = linkify(currentDataSubstring,
+                options: const LinkifyOptions(humanize: false));
+
+            children.add(buildTextSpan(
+              elements,
               style: currentStyle,
+              linkStyle: currentStyle.merge(_linkStyle),
+              onOpen: (link) => onLinkTap != null ? onLinkTap(link.url) : {},
             ));
 
             /// Reset
@@ -157,9 +175,14 @@ mixin FormattedTextUtils {
 
     /// if the current pattern is not closed yet apply the started pattern
     if (currentDataSubstring.isNotEmpty) {
-      children.add(TextSpan(
-        text: currentDataSubstring,
+      final elements = linkify(currentDataSubstring,
+          options: const LinkifyOptions(humanize: false));
+
+      children.add(buildTextSpan(
+        elements,
         style: appliedStyles.last,
+        linkStyle: appliedStyles.last.merge(_linkStyle),
+        onOpen: (link) => onLinkTap != null ? onLinkTap(link.url) : {},
       ));
     }
 
