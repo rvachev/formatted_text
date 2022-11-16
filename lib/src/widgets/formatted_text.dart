@@ -22,6 +22,7 @@ class FormattedText extends StatelessWidget {
     this.semanticsLabel,
     this.textWidthBasis,
     this.textHeightBehavior,
+    this.onLinkTap,
   }) : super(key: key);
 
   /// The text to display.
@@ -121,14 +122,14 @@ class FormattedText extends StatelessWidget {
   /// {@macro flutter.painting.textPainter.textWidthBasis}
   final TextWidthBasis? textWidthBasis;
 
+  /// The action which will execute on link tap
+  final void Function(String link)? onLinkTap;
+
   @override
   Widget build(BuildContext context) {
     final List<InlineSpan> children = FormattedTextUtils.formattedSpans(
-      context,
-      data,
-      style: style,
-      formatters: formatters,
-    );
+        context, data,
+        style: style, formatters: formatters, onLinkTap: onLinkTap);
 
     return Text.rich(
       TextSpan(
