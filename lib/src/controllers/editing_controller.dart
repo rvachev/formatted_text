@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/widgets.dart';
 import 'package:formatted_text/formatted_text.dart';
 
@@ -98,8 +96,6 @@ class FormattedTextEditingController extends TextEditingController {
         break;
       }
     }
-
-    log('cursor at ${startIndex + 1} of $spansLength');
 
     return textStyles;
   }
