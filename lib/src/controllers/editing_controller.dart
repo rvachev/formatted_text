@@ -52,7 +52,7 @@ class FormattedTextEditingController extends TextEditingController {
   set text(String newText) {
     value = value.copyWith(
       text: newText,
-      selection: TextSelection.collapsed(offset: newText.length),
+      selection: TextSelection.collapsed(offset: selection.extentOffset + 1),
       composing: TextRange.empty,
     );
   }
