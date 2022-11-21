@@ -1,6 +1,8 @@
-import 'package:flutter/widgets.dart';
+import 'dart:developer';
 
-import '../models/text_formatter.dart';
+import 'package:flutter/widgets.dart';
+import 'package:formatted_text/formatted_text.dart';
+
 import '../utils/utils.dart';
 
 class FormattedTextEditingController extends TextEditingController {
@@ -24,6 +26,8 @@ class FormattedTextEditingController extends TextEditingController {
 
   final List<FormattedTextFormatter>? formatters;
 
+  List<InlineSpan> _currentSpans = [];
+
   @override
   TextSpan buildTextSpan({
     required BuildContext context,
@@ -37,6 +41,8 @@ class FormattedTextEditingController extends TextEditingController {
       showFormattingCharacters: true,
       formatters: formatters,
     );
+
+    _currentSpans = children;
 
     return TextSpan(style: style, children: children);
   }
@@ -62,5 +68,39 @@ class FormattedTextEditingController extends TextEditingController {
       'even for readonly text fields',
     );
     super.value = newValue;
+  }
+
+  List<TextStyle> get selectionTextStyles {
+    final startIndex = selection.baseOffset - 1;
+    final endIndex = selection.extentOffset;
+
+    final textStyles = <TextStyle>[];
+
+    int spansLength = 0;
+
+    for (final span in _currentSpans) {
+      if (span is! TextSpan) continue;
+      spansLength += span.text?.length ??
+          ((span.children?.isNotEmpty ?? false)
+              ? (span.children![0] as TextSpan).text?.length
+              : 0) ??
+          0;
+      if (spansLength >= startIndex) {
+        final spanStyle = span.style ??
+            ((span.children?.isNotEmpty ?? false)
+                ? (span.children![0] as TextSpan).style
+                : null);
+        if (spanStyle != null) {
+          textStyles.add(spanStyle.copyWith(inherit: true));
+        }
+      }
+      if (spansLength >= endIndex) {
+        break;
+      }
+    }
+
+    log('cursor at ${startIndex + 1} of $spansLength');
+
+    return textStyles;
   }
 }
