@@ -32,12 +32,16 @@ mixin LinkModifier {
 
       final linkSubstring = text.substring(match.start, match.end);
 
+      GestureRecognizer? recognizer;
+      if (onLinkTap != null) {
+        recognizer = TapGestureRecognizer()
+          ..onTap = () => onLinkTap(linkSubstring);
+      }
+
       result.add(TextSpan(
           text: linkSubstring,
           style: style?.merge(_linkStyle),
-          recognizer: TapGestureRecognizer()
-            ..onTap =
-                () => onLinkTap != null ? onLinkTap(linkSubstring) : null));
+          recognizer: recognizer));
     }
     final textSubstring = text.substring(previousEndIndex);
     if (textSubstring.isNotEmpty) {
