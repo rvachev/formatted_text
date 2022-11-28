@@ -79,16 +79,28 @@ class FormattedTextEditingController extends TextEditingController {
 
     for (final span in _currentSpans) {
       if (span is! TextSpan) continue;
-      spansLength += span.text?.length ??
-          ((span.children?.isNotEmpty ?? false)
-              ? (span.children![0] as TextSpan).text?.length
-              : 0) ??
-          0;
+      if (span.children?.isNotEmpty ?? false) {
+        for (final child in span.children!) {
+          spansLength += (child as TextSpan).text?.length ?? 0;
+        }
+      }
+      if (span.text != null) {
+        spansLength += span.text!.length;
+      }
       if (spansLength >= startIndex) {
-        final spanStyle = span.style ??
-            ((span.children?.isNotEmpty ?? false)
-                ? (span.children![0] as TextSpan).style
-                : null);
+        TextStyle? spanStyle;
+        if (span.children?.isNotEmpty ?? false) {
+          for (final child in span.children!) {
+            if (spanStyle == null) {
+              spanStyle = child.style;
+              continue;
+            }
+            spanStyle.merge(child.style?.copyWith(inherit: true));
+          }
+        }
+        if (span.style != null) {
+          spanStyle ??= span.style;
+        }
         if (spanStyle != null) {
           textStyles.add(spanStyle.copyWith(inherit: true));
         }
