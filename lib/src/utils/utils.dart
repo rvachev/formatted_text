@@ -75,7 +75,7 @@ mixin FormattedTextUtils {
             if (showFormattingCharacters) {
               children.add(TextSpan(
                 text: lastFormatter.patternChars,
-                style: currentStyle.copyWith(
+                style: (style ?? const TextStyle()).copyWith(
                     color: (currentStyle.color ?? Theme.of(context).hintColor)
                         .withOpacity(0.2)),
               ));
@@ -146,7 +146,7 @@ mixin FormattedTextUtils {
           if (showFormattingCharacters) {
             children.add(TextSpan(
               text: formatter.patternChars,
-              style: newStyle.copyWith(
+              style: (style ?? const TextStyle()).copyWith(
                   color: (newStyle.color ?? Theme.of(context).hintColor)
                       .withOpacity(0.2)),
             ));
