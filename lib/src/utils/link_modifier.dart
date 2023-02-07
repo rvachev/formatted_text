@@ -8,7 +8,7 @@ const _linkStyle = TextStyle(
 
 mixin LinkModifier {
   static final matcher = RegExp(
-      r'(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)');
+      r'(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)');
 
   static List<InlineSpan> modifyLink(String text,
       {TextStyle? style, void Function(String link)? onLinkTap}) {
